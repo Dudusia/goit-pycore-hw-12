@@ -1,0 +1,81 @@
+# .gitlab/python.gitlab-ci.yml
+workflow:
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never # Skip pipeline for tags
+    - if: $CI_COMMIT_BRANCH
+      when: always # Run pipeline for all branches
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.pip-cache"
+  APP_DIR: "$CI_PROJECT_DIR/src/address_book"
+
+stages:
+  - python:lint
+  - python:test
+  - python:quality
+
+default:
+  image: python:3.11
+  before_script:
+    - cd $APP_DIR
+    - python --version
+    - pip install -r requirements.txt
+  cache:
+    paths:
+      - .pip-cache/
+      - .pytest_cache/
+      - .pre-commit-cache/
+
+python:requirements:
+  stage: .pre
+  script:
+    - pip freeze > requirements.txt
+  artifacts:
+    paths:
+      - $APP_DIR/requirements.txt
+    expire_in: 1 week
+
+python:flake8:
+  stage: python:lint
+  script:
+    - pip install flake8
+    - flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+    - flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+  allow_failure: true
+
+python:black:
+  stage: python:lint
+  script:
+    - pip install black
+    - black --check .
+  allow_failure: true
+
+python:isort:
+  stage: python:lint
+  script:
+    - pip install isort
+    - isort --check-only --diff .
+  allow_failure: true
+
+python:mypy:
+  stage: python:test
+  script:
+    - pip install mypy
+    - mypy models/ main.py
+  allow_failure: false
+
+python:bandit:
+  stage: python:quality
+  script:
+    - pip install bandit
+    - bandit -r . -ll
+  allow_failure: true
+
+python:radon:
+  stage: python:quality
+  script:
+    - pip install radon
+    - radon cc . -a -nb
+    - radon mi . -nb
+  allow_failure: true

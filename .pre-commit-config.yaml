@@ -1,0 +1,58 @@
+# .pre-commit-config.yaml
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: debug-statements
+      - id: name-tests-test
+      - id: requirements-txt-fixer
+  - repo: https://github.com/asottile/setup-cfg-fmt
+    rev: v2.7.0
+    hooks:
+      - id: setup-cfg-fmt
+  - repo: https://github.com/asottile/reorder-python-imports
+    rev: v3.14.0
+    hooks:
+      - id: reorder-python-imports
+        args: [--add-import, "from __future__ import annotations"]
+  - repo: https://github.com/asottile/add-trailing-comma
+    rev: v3.1.0
+    hooks:
+      - id: add-trailing-comma
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.18.0
+    hooks:
+      - id: pyupgrade
+        args: [--py39-plus]
+  - repo: https://github.com/hhatto/autopep8
+    rev: v2.3.1
+    hooks:
+      - id: autopep8
+  # - repo: https://github.com/ambv/black
+  #   rev: stable
+  #   hooks:
+  #     - id: black
+  #       language_version: python3.13
+  - repo: https://github.com/PyCQA/flake8
+    rev: 7.1.1
+    hooks:
+      - id: flake8
+  - repo: local
+    hooks:
+        - id: add-file-annotations
+          name: Add File Path Annotations
+          entry: python scripts/add_annotations.py
+          language: python
+          types: [text]
+          args: [--no-stage]
+          exclude: |
+            (?x)^(
+                README\.md|                # Exclude README.md in root
+                docs/.*|                  # Exclude everything in docs directory
+                .*/README\.md|            # Exclude README.md in any directory
+                \.pre-commit-config\.yaml| # Exclude pre-commit config itself
+                .*/add_annotations\.py     # Exclude the script
+            )$
