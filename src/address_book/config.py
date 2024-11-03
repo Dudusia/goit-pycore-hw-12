@@ -42,7 +42,9 @@ class Config:
     STORAGE_FILE_NAME = "addressbook.pkl"
     STORAGE_FILE_PATH = (STORAGE_DIR / STORAGE_FILE_NAME).absolute()
     STORAGE_CLI_HISTORY_FILENAME = ".address_book_history"
-    STORAGE_CLI_HISTORY_FILE_PATH = (STORAGE_DIR / STORAGE_CLI_HISTORY_FILENAME).absolute()
+    STORAGE_CLI_HISTORY_FILE_PATH = (
+        STORAGE_DIR / STORAGE_CLI_HISTORY_FILENAME
+    ).absolute()
 
     # Logs
     LOG_LEVEL = INFO

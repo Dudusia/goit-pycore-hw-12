@@ -10,8 +10,8 @@ from __future__ import annotations
 import pickle
 
 from config import Config
-from models import AddressBook
 from interface import CLIHandler
+from models import AddressBook
 
 
 def save_data(book, filename=Config.STORAGE_FILE_PATH):

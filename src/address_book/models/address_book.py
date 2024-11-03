@@ -11,8 +11,8 @@ from collections import UserDict
 from datetime import datetime
 from datetime import timedelta
 
-from exceptions import RecordNotFoundException
 from exceptions import DuplicateRecordException
+from exceptions import RecordNotFoundException
 from models import Record
 
 

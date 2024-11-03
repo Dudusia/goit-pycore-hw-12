@@ -7,11 +7,16 @@ corresponding commands, and returns formatted responses.
 """
 from __future__ import annotations
 
-from typing import Callable, List, Tuple
+from typing import Callable
+from typing import List
+from typing import Tuple
 
-from models import AddressBook, Record
-from exceptions import AddressBookException, RecordNotFoundException, DuplicateRecordException
+from exceptions import AddressBookException
+from exceptions import DuplicateRecordException
+from exceptions import RecordNotFoundException
 from interface import Commands
+from models import AddressBook
+from models import Record
 
 
 class CLIHandler:
@@ -80,6 +85,7 @@ class CLIHandler:
             ...     # Function code that might raise exceptions
             ...     pass
         """
+
         def inner(self, *args, **kwargs) -> str:
             try:
                 return func(self, *args, **kwargs)
@@ -94,7 +100,7 @@ class CLIHandler:
         return inner
 
     @_input_error
-    def _parse_input(self, user_input: str) -> Tuple[str, List[str]]:
+    def _parse_input(self, user_input: str) -> tuple[str, list[str]]:
         """Parse user input into command and arguments.
 
         Args:
@@ -125,7 +131,7 @@ class CLIHandler:
         return "Good bye!"
 
     @_input_error
-    def _handle_add(self, args: List[str]) -> str:
+    def _handle_add(self, args: list[str]) -> str:
         """Handle the add command.
 
         Creates a new contact or adds a phone number to an existing contact.
@@ -151,7 +157,7 @@ class CLIHandler:
         return "Contact updated."
 
     @_input_error
-    def _handle_change(self, args: List[str]) -> str:
+    def _handle_change(self, args: list[str]) -> str:
         """Handle the change command.
 
         Updates an existing phone number for a contact.
@@ -175,7 +181,7 @@ class CLIHandler:
         return "Contact updated."
 
     @_input_error
-    def _handle_phone(self, args: List[str]) -> str:
+    def _handle_phone(self, args: list[str]) -> str:
         """Handle the phone command.
 
         Retrieves phone numbers for a specified contact.
@@ -205,7 +211,7 @@ class CLIHandler:
         return str(self.book)
 
     @_input_error
-    def _handle_add_birthday(self, args: List[str]) -> str:
+    def _handle_add_birthday(self, args: list[str]) -> str:
         """Handle the add-birthday command.
 
         Adds a birthday to an existing contact.
@@ -229,7 +235,7 @@ class CLIHandler:
         return "Birthday added."
 
     @_input_error
-    def _handle_show_birthday(self, args: List[str]) -> str:
+    def _handle_show_birthday(self, args: list[str]) -> str:
         """Handle the show-birthday command.
 
         Retrieves birthday information for a specified contact.

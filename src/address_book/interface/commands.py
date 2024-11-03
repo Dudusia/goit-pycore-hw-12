@@ -15,7 +15,8 @@ Example:
 from __future__ import annotations
 
 from enum import Enum
-from typing import NamedTuple, Set
+from typing import NamedTuple
+from typing import Set
 
 
 class CommandInfo(NamedTuple):
@@ -38,7 +39,7 @@ class CommandInfo(NamedTuple):
     usage: str
     description: str
     command_name: str
-    aliases: Set[str] = set()
+    aliases: set[str] = set()
 
 
 class Commands(Enum):
@@ -70,62 +71,62 @@ class Commands(Enum):
     ADD = CommandInfo(
         usage="add [name] [phone]",
         description="Add a new contact or phone number",
-        command_name="add"
+        command_name="add",
     )
 
     CHANGE = CommandInfo(
         usage="change [name] [old phone] [new phone]",
         description="Change existing phone number",
-        command_name="change"
+        command_name="change",
     )
 
     PHONE = CommandInfo(
         usage="phone [name]",
         description="Show phone numbers for a contact",
-        command_name="phone"
+        command_name="phone",
     )
 
     ADD_BIRTHDAY = CommandInfo(
         usage="add-birthday [name] [DD.MM.YYYY]",
         description="Add birthday for a contact",
-        command_name="add-birthday"
+        command_name="add-birthday",
     )
 
     SHOW_BIRTHDAY = CommandInfo(
         usage="show-birthday [name]",
         description="Show birthday for a contact",
-        command_name="show-birthday"
+        command_name="show-birthday",
     )
 
     ALL = CommandInfo(
         usage="all",
         description="Show all contacts",
-        command_name="all"
+        command_name="all",
     )
 
     BIRTHDAYS = CommandInfo(
         usage="birthdays",
         description="Show upcoming birthdays",
-        command_name="birthdays"
+        command_name="birthdays",
     )
 
     HELLO = CommandInfo(
         usage="hello",
         description="Get a greeting",
-        command_name="hello"
+        command_name="hello",
     )
 
     EXIT = CommandInfo(
         usage="exit",
         description="Exit the program",
         command_name="exit",
-        aliases={"close", "quit"}
+        aliases={"close", "quit"},
     )
 
     HELP = CommandInfo(
         usage="help",
         description="Show available commands",
-        command_name="help"
+        command_name="help",
     )
 
     @property
@@ -164,8 +165,10 @@ class Commands(Enum):
         """
         command_name = command_name.lower()
         for command in cls:
-            if (command.value.command_name == command_name or
-                command_name in command.value.aliases):
+            if (
+                command.value.command_name == command_name
+                or command_name in command.value.aliases
+            ):
                 return command
         raise ValueError(f"Unknown command: {command_name}")
 
