@@ -1,8 +1,9 @@
 # src/address_book/models/birthday.py
-"""Module containing the Birthday field class.
+"""Birthday field implementation for the address book system.
 
 This module provides the Birthday class for storing and validating contact
-birthday dates in the address book system.
+birthdays. It ensures dates are in the correct format and not in the future.
+
 """
 from __future__ import annotations
 
@@ -14,13 +15,19 @@ from models import Field
 
 
 class Birthday(Field):
-    """Class representing a contact's birthday.
+    """Field implementation for storing and validating birthday dates.
 
-    Extends the Field class with specific validation for birthday dates.
-    Dates must be in DD.MM.YYYY format and cannot be in the future.
+    The Birthday class ensures that dates are provided in the correct format
+    (DD.MM.YYYY) and represent valid calendar dates that are not in the future.
+
+    Args:
+        value: Birthday date string in DD.MM.YYYY format.
+
+    Raises:
+        InvalidBirthdayError: If date string is invalid or represents a future date.
 
     Attributes:
-        _value (datetime): Protected storage for the birthday date.
+        _value: Protected storage for the datetime object.
     """
 
     @property
@@ -29,18 +36,36 @@ class Birthday(Field):
 
         Returns:
             datetime: The stored birthday date.
+
+        Example:
+            >>> birthday = Birthday("01.01.1990")
+            >>> print(birthday.value.strftime('%Y-%m-%d'))
+            1990-01-01
         """
         return self._value
 
     @value.setter
     def value(self, new_value: Any) -> None:
-        """Set the birthday value with validation.
+        """Set and validate the birthday value.
 
         Args:
             new_value: Birthday date string in DD.MM.YYYY format.
 
         Raises:
-            InvalidBirthdayError: If the date or its format is invalid or value is not a string or date is in the future.
+            InvalidBirthdayError: If any of these conditions are met:
+                - Input is not a string
+                - Date format is incorrect (not DD.MM.YYYY)
+                - Date is invalid (e.g., February 31st)
+                - Date is in the future
+
+        Example:
+            >>> birthday = Birthday("01.01.1990")
+            >>>
+            >>> # This will raise InvalidBirthdayError (future date)
+            >>> birthday.value = "01.01.2525"
+            >>>
+            >>> # This will raise InvalidBirthdayError (invalid format)
+            >>> birthday.value = "1990-01-01"
         """
         if not isinstance(new_value, str):
             raise InvalidBirthdayError("Birthday must be a string in DD.MM.YYYY format")
@@ -60,9 +85,14 @@ class Birthday(Field):
         self._value = parsed_date
 
     def __str__(self) -> str:
-        """Return string representation of the birthday value.
+        """Return string representation of the birthday.
 
         Returns:
-            str: String representation of the stored value.
+            str: Birthday date in DD.MM.YYYY format.
+
+        Example:
+            >>> birthday = Birthday("01.01.1990")
+            >>> str(birthday)
+            '01.01.1990'
         """
         return self.value.strftime('%d.%m.%Y')

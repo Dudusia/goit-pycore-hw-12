@@ -1,13 +1,10 @@
 # src/address_book/models/record.py
-"""Module containing the Record class for managing individual contacts.
+"""Contact record implementation for the address book system.
 
 This module provides the Record class which serves as a container for contact
 information including name, phone numbers, and birthday.
 """
 from __future__ import annotations
-
-from typing import List
-from typing import Optional
 
 from exceptions import DuplicateBirthdayError
 from exceptions import DuplicatePhoneError
@@ -18,15 +15,17 @@ from models import Phone
 
 
 class Record:
-    """Class representing a contact record.
+    """Container for contact information.
 
-    Manages a contact's information including name, phone numbers, and birthday.
-    Provides methods for adding, removing, and editing contact details.
+    Stores and manages a contact's details including name, multiple phone numbers,
+    and an optional birthday.
 
-    Attributes:
-        _name (Name): The contact's name (protected).
-        _phones (List[Phone]): List of the contact's phone numbers (protected).
-        _birthday (Optional[Birthday]): The contact's birthday, if set (protected).
+    Args:
+        name: The contact's name.
+
+    Raises:
+        EmptyNameError: If the name is empty.
+        InvalidNameError: If the name format is invalid.
     """
 
     def __init__(self, name: str) -> None:
@@ -34,10 +33,6 @@ class Record:
 
         Args:
             name: The contact's name.
-
-        Raises:
-            EmptyNameError: If the name is empty.
-            InvalidNameError: If the name is not a string or not a proper name.
         """
         self._name: Name = Name(name)
         self._phones: list[Phone] = []
@@ -61,7 +56,7 @@ class Record:
 
         Raises:
             EmptyNameError: If the name is empty.
-            InvalidNameError: If the name is not a string or not a proper name.
+            InvalidNameError: If the name format is invalid.
         """
         self._name = Name(new_name)
 
@@ -70,7 +65,7 @@ class Record:
         """Get the contact's phone numbers.
 
         Returns:
-            List[Phone]: List of phone number objects.
+            List of phone number objects.
         """
         return self._phones
 
@@ -79,7 +74,7 @@ class Record:
         """Get the contact's birthday.
 
         Returns:
-            Optional[Birthday]: Birthday object if set, None otherwise.
+            Birthday object if set, None otherwise.
         """
         return self._birthday
 
@@ -88,10 +83,10 @@ class Record:
         """Set the contact's birthday.
 
         Args:
-            new_birthday: Birthday date string in DD.MM.YYYY format or None.
+            new_birthday: Birthday date string in DD.MM.YYYY format, or None to remove.
 
         Raises:
-            InvalidBirthdayError: If the date or its format is invalid or value is not a string or date is in the future.
+            InvalidBirthdayError: If the date format or value is invalid.
         """
         if new_birthday is None:
             self._birthday = None
@@ -102,11 +97,11 @@ class Record:
         """Add a new phone number to the contact.
 
         Args:
-            phone_number: The phone number to add.
+            phone_number: Phone number to add.
 
         Raises:
-            InvalidPhoneError: If the phone number is not exactly 10 digits or not a string.
-            DuplicatePhoneError: If phone number provided already exists for this contact.
+            InvalidPhoneError: If the phone number format is invalid.
+            DuplicatePhoneError: If the number already exists.
         """
         phone = Phone(phone_number)
         if self.find_phone(phone_number):
@@ -119,10 +114,10 @@ class Record:
         """Remove a phone number from the contact.
 
         Args:
-            phone_number: The phone number to remove.
+            phone_number: Phone number to remove.
 
         Raises:
-            PhoneNotFoundException: If the phone number is not found.
+            PhoneNotFoundException: If the number is not found.
         """
         phone = self.find_phone(phone_number)
         if phone:
@@ -134,12 +129,12 @@ class Record:
         """Edit an existing phone number.
 
         Args:
-            old_phone: The phone number to replace.
-            new_phone: The new phone number.
+            old_phone: Existing phone number to change.
+            new_phone: New phone number.
 
         Raises:
-            InvalidPhoneError: If the phone number is not exactly 10 digits or not a string.
-            PhoneNotFoundException: If the old phone number is not found.
+            PhoneNotFoundException: If old number is not found.
+            InvalidPhoneError: If new number format is invalid.
         """
         phone = self.find_phone(old_phone)
         if not phone:
@@ -150,10 +145,10 @@ class Record:
         """Find a phone number in the contact's phones.
 
         Args:
-            phone_number: The phone number to search for.
+            phone_number: Phone number to search for.
 
         Returns:
-            Optional[Phone]: The found Phone object or None if not found.
+            Phone object if found, None otherwise.
         """
         return next((phone for phone in self._phones if phone.value == phone_number), None)
 
@@ -161,20 +156,21 @@ class Record:
         """Add a birthday date to the contact.
 
         Args:
-            birthday_date: Birthday date in DD.MM.YYYY format.
+            birthday_date: Birthday in DD.MM.YYYY format.
 
         Raises:
-            DuplicateBirthdayError: If birthday date is invalid or already exists.
+            DuplicateBirthdayError: If birthday is already set.
+            InvalidBirthdayError: If date format or value is invalid.
         """
         if self._birthday:
             raise DuplicateBirthdayError("Birthday already exists for this contact")
         self._birthday = Birthday(birthday_date)
 
     def __str__(self) -> str:
-        """Return string representation of the contact.
+        """Convert record to string representation.
 
         Returns:
-            str: Formatted string with contact's details.
+            Formatted string with contact's details.
         """
         phones_str = ', '.join(str(p) for p in self._phones)
         birthday_str = str(self._birthday) if self._birthday else "not added yet"

@@ -1,39 +1,60 @@
 # src/address_book/models/__init__.py
-"""Address Book Package.
+"""Models package for the address book system.
 
-This package provides a complete implementation of an address book system with
-support for managing contacts, their phone numbers, and birthdays.
+This package provides the core data models and storage functionality for the
+address book system. It includes classes for managing contacts, their fields,
+and the address book itself.
 
 Classes:
-    Field: Abstract base class for all field types in the address book.
-    Name: Field subclass for storing and validating contact names.
-    Phone: Field subclass for storing and validating phone numbers.
-    Birthday: Field subclass for storing and validating birth dates.
-    Record: Container class for managing individual contacts and their fields.
-    AddressBook: Main class for storing and managing all contact records.
+    Field: Base field class for contact attributes.
+        A common ancestor for all field types that provides basic validation
+        and value storage functionality.
 
-Usage Example:
-    from models import AddressBook, Record
+    Name: Field implementation for contact names.
+        Validates and stores contact names, ensuring they meet format requirements
+        and contain valid characters.
 
-    # Create a new address book
-    book = AddressBook()
+    Phone: Field implementation for phone numbers.
+        Handles phone number validation and storage, ensuring numbers contain
+        exactly 10 digits.
 
-    # Add a new contact
-    record = Record("John")
-    record.add_phone("1234567890")
-    record.add_birthday("01.01.1990")
-    book.add_record(record)
+    Birthday: Field implementation for birth dates.
+        Manages birthday dates, ensuring valid format (DD.MM.YYYY) and preventing
+        future dates.
 
-All fields implement validation to ensure data integrity:
-- Names cannot be empty
-- Phone numbers must be exactly 10 digits
-- Birthdays must be in DD.MM.YYYY format and not in the future
+    Record: Container for contact information.
+        Manages a single contact's data including name, multiple phone numbers,
+        and birthday information.
 
-The package handles common operations like:
-- Adding/removing contacts
-- Managing multiple phone numbers per contact
-- Tracking birthdays
-- Generating upcoming birthday notifications
+    AddressBook: Main container for all contacts.
+        Manages the collection of all contacts and provides methods for adding,
+        finding, and managing records.
+
+Example:
+    Basic usage of the address book system:
+
+    >>> from models import AddressBook, Record
+    >>>
+    >>> # Create a new address book
+    >>> book = AddressBook()
+    >>>
+    >>> # Create and add a new contact
+    >>> record = Record("John")
+    >>> record.add_phone("1234567890")
+    >>> record.add_birthday("01.01.1990")
+    >>> book.add_record(record)
+
+Field Validation:
+    Each field type implements specific validation rules:
+    - Names: Must be non-empty strings with valid characters
+    - Phones: Must be exactly 10 digits
+    - Birthdays: Must be in DD.MM.YYYY format and not in the future
+
+Notes:
+    - The Record class allows multiple phone numbers per contact
+    - Birthday dates are validated to prevent future dates
+    - All fields raise appropriate exceptions for invalid data
+    - The AddressBook class inherits from UserDict for dict-like behavior
 """
 from __future__ import annotations
 
