@@ -9,8 +9,8 @@ The package consists of two main components:
     - CLIHandler: Class that manages command-line interface interactions
 
 Example:
-    >>> from address_book.models import AddressBook
-    >>> from address_book.interface import CLIHandler
+    >>> from models import AddressBook
+    >>> from interface import CLIHandler
     >>>
     >>> # Create an address book and CLI handler
     >>> book = AddressBook()
