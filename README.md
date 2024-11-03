@@ -2,23 +2,63 @@
 
 A command-line address book application built in Python using object-oriented programming principles. The project features a clean, modular architecture with comprehensive data validation, birthday tracking capabilities, and robust error handling.
 
-## Project Structure
+## Project Structure and Dependencies
 
 ```
 address_book/
 ├── models/
-│   ├── __init__.py        # Package initialization and exports
-│   ├── field.py           # Abstract base field class
-│   ├── name.py            # Name field implementation
-│   ├── phone.py           # Phone field implementation
-│   ├── birthday.py        # Birthday field implementation
-│   ├── record.py          # Contact record class
-│   └── address_book.py    # Main address book container
+│   ├── __init__.py        # Exports all model classes
+│   ├── field.py           # Abstract base class, no dependencies
+│   ├── name.py           # Depends on: field.py, exceptions
+│   ├── phone.py          # Depends on: field.py, exceptions
+│   ├── birthday.py       # Depends on: field.py, exceptions
+│   ├── record.py         # Depends on: name.py, phone.py, birthday.py, exceptions
+│   └── address_book.py   # Depends on: record.py, exceptions
 ├── exceptions/
-│   ├── __init__.py        # Exception exports
-│   └── exceptions.py      # Custom exception definitions
-└── main.py                # Application entry point
+│   ├── __init__.py       # Exports all exceptions
+│   └── exceptions.py     # No dependencies
+├── interface/
+│   ├── __init__.py       # Exports interface components
+│   ├── commands.py       # No dependencies
+│   └── cli_handler.py    # Depends on: commands.py, models, exceptions
+├── config.py             # No dependencies
+└── main.py              # Depends on: config.py, models, interface
 ```
+
+### Module Dependencies Explained
+
+1. Base Modules (No Dependencies):
+   - `exceptions/exceptions.py`: Defines base exception hierarchy
+   - `models/field.py`: Abstract base class for fields
+   - `config.py`: Application configuration
+   - `interface/commands.py`: Command definitions
+
+2. Field Implementations:
+   - `models/name.py`, `phone.py`, `birthday.py`
+   - Depend on: `field.py` and `exceptions`
+   - Handle specific field validation and storage
+
+3. Record Management:
+   - `models/record.py`
+   - Depends on: all field implementations and exceptions
+   - Manages individual contact data
+
+4. Address Book:
+   - `models/address_book.py`
+   - Depends on: `record.py` and exceptions
+   - Handles contact collection and birthday tracking
+
+5. Interface:
+   - `interface/cli_handler.py`
+   - Depends on: `commands.py`, models package, and exceptions
+   - Manages user interaction
+
+6. Application Entry:
+   - `main.py`
+   - Depends on: config, models, and interface packages
+   - Handles initialization and data persistence
+
+[Rest of the original content remains the same until "Installation"]
 
 ## Installation
 
@@ -32,6 +72,8 @@ cd address-book
 ```bash
 python --version
 ```
+
+3. No additional package installation is required as the application uses only Python standard library.
 
 ## Class Structure
 
@@ -222,14 +264,17 @@ except RecordNotFoundException as e:
 
 ## Dependencies
 - Python 3.7+
-- No external packages required
+- Standard Library Modules:
+  - `abc`: For abstract base classes
+  - `collections`: For UserDict
+  - `datetime`: For date handling
+  - `pickle`: For data persistence
+  - `pathlib`: For file path handling
+  - `typing`: For type hints
+  - `re`: For name validation patterns
+  - `logging`: For error logging
 
-## Contributing
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+No external packages required.
 
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
