@@ -1,5 +1,9 @@
-from pathlib import Path
+# src/address_book/config.py
+from __future__ import annotations
+
 from logging import INFO
+from pathlib import Path
+
 
 class Config:
     # General
@@ -10,6 +14,8 @@ class Config:
     STORAGE_DIR.mkdir(exist_ok=True)
     STORAGE_FILE_NAME = "addressbook.pkl"
     STORAGE_FILE_PATH = (STORAGE_DIR / STORAGE_FILE_NAME).absolute()
+    STORAGE_CLI_HISTORY_FILENAME = ".address_book_history"
+    STORAGE_CLI_HISTORY_FILE_PATH = (STORAGE_DIR / STORAGE_CLI_HISTORY_FILENAME).absolute()
 
     # Logs
     LOG_LEVEL = INFO
@@ -19,5 +25,3 @@ class Config:
     LOG_DIR.mkdir(exist_ok=True)
     LOG_FILE_NAME = "log.log"
     LOG_FILE_PATH = (CURRENT_DIR / LOG_DIR / LOG_FILE_NAME).absolute()
-
-
